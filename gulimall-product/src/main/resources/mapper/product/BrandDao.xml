@@ -13,6 +13,11 @@
         <result property="firstLetter" column="first_letter"/>
         <result property="sort" column="sort"/>
     </resultMap>
+    <update id="updateStatus">
+        update gulimall_pms.pms_brand
+        set show_status = #{showStatus}
+        where brand_id = #{brandId}
+    </update>
 
 
 </mapper>

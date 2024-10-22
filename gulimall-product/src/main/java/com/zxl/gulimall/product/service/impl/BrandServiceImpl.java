@@ -12,10 +12,13 @@ import com.zxl.gulimall.product.dao.BrandDao;
 import com.zxl.gulimall.product.entity.BrandEntity;
 import com.zxl.gulimall.product.service.BrandService;
 
+import javax.annotation.Resource;
+
 
 @Service("brandService")
 public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> implements BrandService {
-
+    @Resource
+    private BrandDao brandDao;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<BrandEntity> page = this.page(
@@ -26,4 +29,8 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
         return new PageUtils(page);
     }
 
+    @Override
+    public void updateStatus(Long brandId, Integer showStatus) {
+        brandDao.updateStatus(brandId,showStatus);
+    }
 }

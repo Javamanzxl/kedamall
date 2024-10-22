@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>gulimall-common</module>
+        <module>gulimall-gateway</module>
         <module>renren-fast</module>
         <module>gulimall-product</module>
         <module>gulimall-order</module>
