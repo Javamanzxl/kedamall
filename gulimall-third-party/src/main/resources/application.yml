@@ -7,9 +7,9 @@ spring:
         server-addr: localhost:8848
 alibaba:
   cloud:
-    access-key: LTAI5tQ3DAvGMFZjgtoQtJPU
-    secret-key: XmtINsOE90UsILmRCk7nZfXg0YWUz4
+    access-key:
+    secret-key:
     oss:
-      endpoint: oss-cn-beijing.aliyuncs.com
+      endpoint:
 server:
   port: 30000
