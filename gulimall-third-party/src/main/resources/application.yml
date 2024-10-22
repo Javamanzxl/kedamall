@@ -5,11 +5,6 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
-alibaba:
-  cloud:
-    access-key:
-    secret-key:
-    oss:
-      endpoint:
+
 server:
   port: 30000
