@@ -39,7 +39,7 @@ public class GulimallException {
     }
     @ExceptionHandler(Throwable.class)
     public R handleException(Throwable e){
-        log.error("数据效验出现问题{},异常类型{}",e.getMessage(),e.getClass());
+        log.error("系统出现问题{},异常类型{}",e.getMessage(),e.getClass());
         return R.error(ErrorCodeEnum.UNKNOW_EXCEPTION.getCode(), ErrorCodeEnum.UNKNOW_EXCEPTION.getMessage());
     }
 }
