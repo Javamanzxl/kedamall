@@ -3,6 +3,7 @@ package com.zxl.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.gulimall.product.entity.AttrGroupEntity;
+import com.zxl.gulimall.product.vo.AttrGroupRelationVo;
 
 import java.util.Map;
 
@@ -18,5 +19,6 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     PageUtils queryPageByCatelogId(Map<String, Object> params, Long catelogId);
+
 }
 

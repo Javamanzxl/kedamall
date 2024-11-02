@@ -5,7 +5,7 @@ import lombok.Data;
 
 /**
  * @author ：zxl
- * @Description:
+ * @Description: 接收前端信息vo
  * @ClassName: AttrVo
  * @date ：2024/10/28 21:08
  */

@@ -49,7 +49,7 @@ import org.springframework.context.annotation.ComponentScan;
  *  1）、编写异常处理类，使用@ControllerAdvice。
  *  2）、使用@ExceptionHandler标注方法可以处理的异常。
  */
-@MapperScan("com.zxl.gulimall.product.dao")
+//@MapperScan(basePackages = "com.zxl.gulimall.product.dao")
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.zxl.gulimall.product.feign")
 @SpringBootApplication

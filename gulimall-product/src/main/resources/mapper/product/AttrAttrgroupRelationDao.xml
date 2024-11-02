@@ -10,6 +10,20 @@
         <result property="attrGroupId" column="attr_group_id"/>
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
+    <insert id="insertBatch" useGeneratedKeys="true">
+        insert into gulimall_pms.pms_attr_attrgroup_relation (attr_id, attr_group_id)
+        values
+        <foreach collection="relations" item="relation" separator=",">
+            (#{relation.attrId},#{relation.attrGroupId})
+        </foreach>
+    </insert>
+    <delete id="deleteBatchRelation">
+        delete from gulimall_pms.pms_attr_attrgroup_relation
+        where (attr_id, attr_group_id) in
+        <foreach collection="list" item="i" open="(" separator="," close=")">
+            (#{i.attrId},#{i.attrGroupId})
+        </foreach>
+    </delete>
 
 
 </mapper>

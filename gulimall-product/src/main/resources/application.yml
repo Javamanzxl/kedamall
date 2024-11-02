@@ -18,7 +18,7 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 server:
-  port: 10000
+  port: 10001
 logging:
   level:
     com.zxl.gulimall: debug
