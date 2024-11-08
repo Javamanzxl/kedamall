@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.zxl.gulimall.product.entity.BrandEntity;
+import com.zxl.gulimall.product.vo.BrandVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +14,8 @@ import com.zxl.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.zxl.gulimall.product.service.CategoryBrandRelationService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
+
+import javax.annotation.Resource;
 
 
 /**
@@ -23,7 +28,7 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("product/categorybrandrelation")
 public class CategoryBrandRelationController {
-    @Autowired
+    @Resource
     private CategoryBrandRelationService categoryBrandRelationService;
 
     /**
@@ -34,6 +39,26 @@ public class CategoryBrandRelationController {
         PageUtils page = categoryBrandRelationService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 查询分类关联品牌
+     * @param catId
+     * @return
+     */
+    @GetMapping("/brands/list")
+    public R list(@RequestParam(value = "catId",required = true) Long catId){
+        List<BrandEntity> brandEntities = categoryBrandRelationService.brandsList(catId);
+        List<BrandVo> brandVos = null;
+        if(brandEntities!=null) {
+            brandVos = brandEntities.stream().map((brandEntity -> {
+                BrandVo brandVo = new BrandVo();
+                brandVo.setBrandName(brandEntity.getName());
+                brandVo.setBrandId(brandEntity.getBrandId());
+                return brandVo;
+            })).toList();
+        }
+        return R.ok().put("data",brandVos);
     }
 
 

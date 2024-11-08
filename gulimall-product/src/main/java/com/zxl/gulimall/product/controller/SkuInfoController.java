@@ -3,6 +3,8 @@ package com.zxl.gulimall.product.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.zxl.common.to.SkuInfoTo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,15 +33,26 @@ public class SkuInfoController {
     private SkuInfoService skuInfoService;
 
     /**
-     * 列表
+     * 条件分页查询
      */
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = skuInfoService.queryPage(params);
-
+        PageUtils page = skuInfoService.queryPageByCondition(params);
         return R.ok().put("page", page);
     }
 
+    /**
+     * 远程调用openFeign查询skuInfo
+     * @param skuId
+     * @return
+     */
+    @RequestMapping("infoBySkuId")
+    public SkuInfoTo infoBySkuId(@RequestParam Long skuId){
+        SkuInfoEntity skuInfo = skuInfoService.getById(skuId);
+        SkuInfoTo skuInfoTo = new SkuInfoTo();
+        BeanUtils.copyProperties(skuInfo,skuInfoTo);
+        return skuInfoTo;
+    }
 
     /**
      * 信息
@@ -47,7 +60,6 @@ public class SkuInfoController {
     @RequestMapping("/info/{skuId}")
     public R info(@PathVariable("skuId") Long skuId){
 		SkuInfoEntity skuInfo = skuInfoService.getById(skuId);
-
         return R.ok().put("skuInfo", skuInfo);
     }
 

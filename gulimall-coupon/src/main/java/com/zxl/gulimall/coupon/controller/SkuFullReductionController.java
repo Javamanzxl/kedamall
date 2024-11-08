@@ -3,18 +3,15 @@ package com.zxl.gulimall.coupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.zxl.common.to.SkuReductionTo;
+import org.springframework.web.bind.annotation.*;
 
 import com.zxl.gulimall.coupon.entity.SkuFullReductionEntity;
 import com.zxl.gulimall.coupon.service.SkuFullReductionService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -27,8 +24,14 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("coupon/skufullreduction")
 public class SkuFullReductionController {
-    @Autowired
+    @Resource
     private SkuFullReductionService skuFullReductionService;
+
+    @PostMapping("/saveInfo")
+    public R saveSkuReduction(@RequestBody SkuReductionTo skuReductionTo){
+        skuFullReductionService.saveSkuReduction(skuReductionTo);
+        return R.ok();
+    }
 
     /**
      * 列表

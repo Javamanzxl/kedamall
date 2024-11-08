@@ -83,4 +83,21 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     public void updateCategory(Long catId, String name) {
         categoryBrandRelationDao.updateCategory(catId,name);
     }
+
+    /**
+     * 查询分类关联品牌
+     * @param catId
+     * @return
+     */
+    @Override
+    public List<BrandEntity> brandsList(Long catId) {
+        List<CategoryBrandRelationEntity> relations =
+                categoryBrandRelationDao.selectList(new LambdaQueryWrapper<CategoryBrandRelationEntity>()
+                .eq(CategoryBrandRelationEntity::getCatelogId, catId));
+        List<Long> brandIds = relations.stream().map(CategoryBrandRelationEntity::getBrandId).toList();
+        if(!brandIds.isEmpty()){
+            return brandDao.selectBatchIds(brandIds);
+        }
+        return null;
+    }
 }

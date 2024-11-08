@@ -12,6 +12,7 @@ import com.zxl.gulimall.product.service.AttrAttrgroupRelationService;
 import com.zxl.gulimall.product.service.AttrService;
 import com.zxl.gulimall.product.service.CategoryService;
 import com.zxl.gulimall.product.vo.AttrGroupRelationVo;
+import com.zxl.gulimall.product.vo.AttrGroupWithAttrsVo;
 import com.zxl.gulimall.product.vo.AttrRespVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +76,19 @@ public class AttrGroupController {
     public R deleteRelation(@RequestBody AttrGroupRelationVo[] relationVos) {
         attrService.deleteRelation(relationVos);
         return R.ok();
+    }
+
+    /**
+     * 获取分类下所有分组&关联属性
+     * @param catelogId
+     * @return
+     */
+    @RequestMapping("/{catelogId}/withattr")
+    public R groupWithAttr(@PathVariable(value = "catelogId") Long catelogId){
+        //1.查出当前分类下的所有属性分组
+        //2.查出每个属性分组的所有属性
+        List<AttrGroupWithAttrsVo> vos = attrGroupService.getGroupWithAttr(catelogId);
+        return R.ok().put("data",vos);
     }
 
 
