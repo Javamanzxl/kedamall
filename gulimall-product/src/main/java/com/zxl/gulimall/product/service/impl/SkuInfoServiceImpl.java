@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -18,10 +19,14 @@ import com.zxl.gulimall.product.dao.SkuInfoDao;
 import com.zxl.gulimall.product.entity.SkuInfoEntity;
 import com.zxl.gulimall.product.service.SkuInfoService;
 
+import javax.annotation.Resource;
+
 
 @Service("skuInfoService")
 public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> implements SkuInfoService {
 
+    @Resource
+    private SkuInfoDao skuInfoDao;
 
     @Override
     public PageUtils queryPageByCondition(Map<String, Object> params) {
@@ -72,4 +77,16 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
         return new PageUtils(page);
     }
 
+    /**
+     * 根据spuId查sku
+     * @param spuId
+     * @return
+     */
+    @Override
+    public List<SkuInfoEntity> getSkuBySpuId(Long spuId) {
+        LambdaQueryWrapper<SkuInfoEntity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SkuInfoEntity::getSpuId,spuId);
+        List<SkuInfoEntity> skuInfos = skuInfoDao.selectList(wrapper);
+        return skuInfos;
+    }
 }

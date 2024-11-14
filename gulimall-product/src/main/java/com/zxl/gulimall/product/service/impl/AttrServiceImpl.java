@@ -262,4 +262,19 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         return new PageUtils(page);
 
     }
+
+    /**
+     * 搜索出可以检索的attrId
+     * @param attrIds
+     * @return
+     */
+    @Override
+    public List<Long> selectSearchAttrIds(List<Long> attrIds) {
+//        LambdaQueryWrapper<AttrEntity> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.in(AttrEntity::getAttrId,attrIds);
+//        wrapper.eq(AttrEntity::getSearchType,1);
+//        List<AttrEntity> attrs = attrDao.selectList(wrapper);
+//        return attrs.stream().map(AttrEntity::getAttrId).toList();
+        return attrDao.selectSearchAttrIds(attrIds);
+    }
 }

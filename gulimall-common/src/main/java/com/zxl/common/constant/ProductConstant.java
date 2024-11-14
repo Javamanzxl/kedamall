@@ -21,4 +21,17 @@ public class ProductConstant {
         }
 
     }
+
+    @Getter
+    public enum StatusEnum{
+        NEW_SPU(0,"新建"),
+        UP_SPU(1,"上架"),
+        DOWN_SPU(2,"下架");
+        private final Integer code;
+        private final String msg;
+        StatusEnum(Integer code,String msg){
+            this.code = code;
+            this.msg = msg;
+        }
+    }
 }

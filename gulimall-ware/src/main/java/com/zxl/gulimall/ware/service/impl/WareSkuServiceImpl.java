@@ -1,8 +1,8 @@
 package com.zxl.gulimall.ware.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.zxl.common.to.SkuHasStockTo;
 import com.zxl.common.to.SkuInfoTo;
-import com.zxl.common.utils.R;
 import com.zxl.gulimall.ware.feign.ProductFeign;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -96,5 +96,23 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             wareSkuDao.addStock(wareSkuEntity);
         }
 
+    }
+
+    /**
+     * 查询sku是否有库存
+     *
+     * @param skuIds
+     * @return
+     */
+    @Override
+    public List<SkuHasStockTo> getSkusHasStock(List<Long> skuIds) {
+        List<SkuHasStockTo> tos = skuIds.stream().map(skuId -> {
+            SkuHasStockTo skuHasStockTo = new SkuHasStockTo();
+            Long stock = wareSkuDao.getSkuStock(skuId);
+            skuHasStockTo.setHasStock(stock == null ? false : stock > 0);
+            skuHasStockTo.setSkuId(skuId);
+            return skuHasStockTo;
+        }).toList();
+        return tos;
     }
 }

@@ -1,9 +1,11 @@
 package com.zxl.gulimall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zxl.common.to.SkuHasStockTo;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.gulimall.ware.entity.WareSkuEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,5 +22,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     PageUtils queryPageByCondition(Map<String, Object> params);
 
     void addStock(WareSkuEntity wareSkuEntity);
+
+    List<SkuHasStockTo> getSkusHasStock(List<Long> skuIds);
 }
 
