@@ -49,6 +49,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @ControllerAdvice
  *  1）、编写异常处理类，使用@ControllerAdvice。
  *  2）、使用@ExceptionHandler标注方法可以处理的异常。
+ *
+ * 5.模板引擎
+ *  1）、thymleaf-starter:关闭缓存
+ *  2)、静态资源都放在static文件夹下就可以按照路径直接访问
+ *  3）、页面放在templates下可以直接访问
+ *      springboot访问项目的时候，默认会找index
+ *  4)、页面修改不重启服务器实时更新
+ *      1.引入dev-tools依赖
+ *      2.修改完页面 ctrl shift f9重新自动编译下页面
  */
 //@MapperScan(basePackages = "com.zxl.gulimall.product.dao")
 @EnableDiscoveryClient
