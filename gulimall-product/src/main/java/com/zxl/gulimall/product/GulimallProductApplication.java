@@ -3,6 +3,7 @@ package com.zxl.gulimall.product;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
@@ -58,12 +59,34 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *  4)、页面修改不重启服务器实时更新
  *      1.引入dev-tools依赖
  *      2.修改完页面 ctrl shift f9重新自动编译下页面
+ * 6.整合redisson作为分布式锁等功能的框架
+ *  1）、引入依赖
+ *  2）、配置redisson
+ * 7.整合SpringCache简化缓存开发
+ *  1）、引入依赖
+ *  2）、写配置
+ *      (1)、自动配置了哪些
+ *          CacheAutoConfiguration会导入RedisCacheAutoConfiguration;
+ *          RedisCacheAutoConfiguration自动配好了RedisCacheManager;
+ *      (2)、配置使用redis作为缓存
+ * 3）、测试使用缓存
+ *      @Cacheable:触发将数据保存到缓存的操作
+ *      @CacheEvict:从缓存删除
+ *      @CachePut:不影响执行更新缓存
+ *      @Caching:组合以上多个操作
+ *      @CacheConfig:在类级别共享缓存的相同配置
+ * 4）、开启缓存功能    @EnableCaching
+ * 5）、CacheAutoConfiguration->RedisCacheConfiguration->
+ *      自动化配置了RedisCacheManager->初始化所有缓存->每个缓存觉得使用什么配置
+ *      ->如果redisCacheConfiguration有就用没有就用默认的->想改缓存的配置，只需要给容器中放一个
+ *      RedisCacheConfiguration即可->就会应用到当前RedisCacheManager管理的所有缓存分区中
  */
 //@MapperScan(basePackages = "com.zxl.gulimall.product.dao")
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.zxl.gulimall.product.feign")
 @SpringBootApplication
 @EnableTransactionManagement
+@EnableCaching
 public class GulimallProductApplication {
 
     public static void main(String[] args) {
