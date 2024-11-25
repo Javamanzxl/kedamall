@@ -88,5 +88,9 @@ public class WareSkuController {
     public List<SkuHasStockTo> getSkusHasStock(@RequestBody List<Long> skuIds) {
         return wareSkuService.getSkusHasStock(skuIds);
     }
+    @GetMapping("{skuId}/hasStock")
+    public boolean hasStockBySkuId(@PathVariable Long skuId){
+        return wareSkuService.hasStockBySkuId(skuId);
+    }
 
 }

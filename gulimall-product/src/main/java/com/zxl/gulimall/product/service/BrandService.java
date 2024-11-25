@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.gulimall.product.entity.BrandEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,5 +21,7 @@ public interface BrandService extends IService<BrandEntity> {
     void updateStatus(Long brandId, Integer showStatus);
 
     void updateCascade(BrandEntity brand);
+
+    List<BrandEntity> getBrandIds(List<Long> brandIds);
 }
 

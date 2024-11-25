@@ -115,4 +115,15 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
         }).toList();
         return tos;
     }
+
+    /**
+     * feign远程调用，根据skuId查询是否有库存
+     * @param skuId
+     * @return
+     */
+    @Override
+    public boolean hasStockBySkuId(Long skuId) {
+        WareSkuEntity wareSkuEntity = wareSkuDao.selectOne(new LambdaQueryWrapper<WareSkuEntity>().eq(WareSkuEntity::getSkuId, skuId));
+        return wareSkuEntity.getStock() - wareSkuEntity.getStockLocked() > 0;
+    }
 }

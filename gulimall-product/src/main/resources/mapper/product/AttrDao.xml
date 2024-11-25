@@ -24,6 +24,23 @@
         </foreach>
         AND search_type = 1
     </select>
+    <!--只要有嵌套属性一定要封装自定义结果集-->
+    <resultMap id="spuItemAttrGroupVo" type="com.zxl.gulimall.product.vo.SpuItemAttrGroupVo">
+        <result property="groupName" column="attr_group_name"/>
+        <collection property="attrs" ofType="com.zxl.gulimall.product.vo.Attr">
+            <result property="attrName" column="attr_name"/>
+            <result property="attrValue" column="attr_value"/>
+        </collection>
+    </resultMap>
+    <select id="getAttrGroupWithAttrsBySpuId"
+            resultMap="spuItemAttrGroupVo">
+        select pav.spu_id,ag.attr_group_id,ag.attr_group_name,aar.attr_id,attr.attr_name,pav.attr_value
+        from gulimall_pms.pms_attr_group ag
+        left join gulimall_pms.pms_attr_attrgroup_relation aar on aar.attr_group_id = ag.attr_group_id
+        left join gulimall_pms.pms_attr attr on attr.attr_id=aar.attr_id
+        left join gulimall_pms.pms_product_attr_value pav on pav.attr_id = attr.attr_id
+        where ag.catelog_id = #{catalogId} and pav.spu_id=#{spuId}
+    </select>
 
 
 </mapper>

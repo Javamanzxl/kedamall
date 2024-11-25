@@ -7,6 +7,7 @@ import com.zxl.gulimall.product.service.CategoryBrandRelationService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -62,5 +63,17 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
             //TODO 更新其他关联数据
         }
 
+    }
+
+    /**
+     * feign查brand
+     * @param brandIds
+     * @return
+     */
+    @Override
+    public List<BrandEntity> getBrandIds(List<Long> brandIds) {
+        LambdaQueryWrapper<BrandEntity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(BrandEntity::getBrandId,brandIds);
+        return brandDao.selectList(wrapper);
     }
 }

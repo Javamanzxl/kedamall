@@ -4,10 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zxl.gulimall.product.dao.AttrAttrgroupRelationDao;
 import com.zxl.gulimall.product.dao.AttrDao;
+import com.zxl.gulimall.product.dao.ProductAttrValueDao;
 import com.zxl.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.zxl.gulimall.product.entity.AttrEntity;
+import com.zxl.gulimall.product.entity.ProductAttrValueEntity;
 import com.zxl.gulimall.product.vo.AttrGroupRelationVo;
 import com.zxl.gulimall.product.vo.AttrGroupWithAttrsVo;
+import com.zxl.gulimall.product.vo.SkuItemVo;
+import com.zxl.gulimall.product.vo.SpuItemAttrGroupVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -38,6 +42,8 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
     private AttrAttrgroupRelationDao relationDao;
     @Resource
     private AttrDao attrDao;
+    @Resource
+    private ProductAttrValueDao productAttrValueDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -102,5 +108,17 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
             return vos;
         }
         return null;
+    }
+
+    /**
+     * 用户端商品详情，根据spuId查询属性分组及其对应属性
+     * @param spuId
+     * @param catalogId
+     * @return
+     */
+    @Override
+    public List<SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId,Long catalogId) {
+        //1.联合查询当前spu有多少对应的属性分组
+        return attrDao.getAttrGroupWithAttrsBySpuId(spuId,catalogId);
     }
 }

@@ -1,10 +1,14 @@
 package com.zxl.gulimall.product.app;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.zxl.common.to.BrandTo;
 import com.zxl.common.valid.AddGroup;
 import com.zxl.common.valid.UpdateGroup;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +41,19 @@ public class BrandController {
         PageUtils page = brandService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * feign查brand
+     * @param brandIds
+     * @return
+     */
+    @GetMapping("/feign/infos")
+    public List<BrandTo> infos(@RequestParam List<Long> brandIds){
+        List<BrandEntity> brands = brandService.getBrandIds(brandIds);
+        List<BrandTo> brandTos = new ArrayList<>();
+        BeanUtils.copyProperties(brands,brandTos);
+        return brandTos;
     }
 
 

@@ -233,7 +233,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                     return attrs1;
                 }).toList();
 
-        //1.查出spuId所有sku信息，品牌的名字
+        //1.查出spuId所有sku信息，品牌的名字、照片
         List<SkuInfoEntity> skuInfos = skuInfoService.getSkuBySpuId(spuId);
         List<Long> skuIds = skuInfos.stream().map(SkuInfoEntity::getSkuId).toList();
         //TODO 1: 发送请求给ware服务查询是否还有库存
@@ -262,6 +262,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             skuEsModel.setHostScore(0L);
             BrandEntity brand = brandDao.selectById(skuInfo.getBrandId());
             skuEsModel.setBrandName(brand.getName());
+            skuEsModel.setBrandImg(brand.getLogo());
             CategoryEntity category = categoryDao.selectById(skuInfo.getCatalogId());
             if (category != null) {
                 skuEsModel.setCatalogName(category.getName());

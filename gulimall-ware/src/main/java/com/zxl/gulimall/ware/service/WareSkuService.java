@@ -24,5 +24,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     void addStock(WareSkuEntity wareSkuEntity);
 
     List<SkuHasStockTo> getSkusHasStock(List<Long> skuIds);
+
+    boolean hasStockBySkuId(Long skuId);
 }
 

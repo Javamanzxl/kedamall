@@ -4,10 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.zxl.common.to.AttrRespTo;
 import com.zxl.gulimall.product.entity.ProductAttrValueEntity;
 import com.zxl.gulimall.product.service.ProductAttrValueService;
 import com.zxl.gulimall.product.vo.AttrRespVo;
 import com.zxl.gulimall.product.vo.AttrVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.zxl.gulimall.product.service.AttrService;
@@ -56,11 +58,24 @@ public class AttrController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{attrId}")
+    @GetMapping("/info/{attrId}")
     public R info(@PathVariable("attrId") Long attrId) {
 //		AttrEntity attr = attrService.getById(attrId);
         AttrRespVo attr = attrService.getAttrInfo(attrId);
         return R.ok().put("attr", attr);
+    }
+
+    /**
+     * feign接口，查attr
+     * @param attrId
+     * @return
+     */
+    @GetMapping("/feign/info/{attrId}")
+    public AttrRespTo feign_info(@PathVariable("attrId") Long attrId) {
+        AttrRespVo attr = attrService.getAttrInfo(attrId);
+        AttrRespTo attrRespTo = new AttrRespTo();
+        BeanUtils.copyProperties(attr,attrRespTo);
+        return attrRespTo;
     }
 
     /**
