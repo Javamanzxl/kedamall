@@ -15,6 +15,7 @@ import com.zxl.gulimall.member.service.MemberLevelService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -27,7 +28,7 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("member/memberlevel")
 public class MemberLevelController {
-    @Autowired
+    @Resource
     private MemberLevelService memberLevelService;
 
     /**

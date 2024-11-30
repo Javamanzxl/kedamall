@@ -7,5 +7,11 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+  session:
+    store-type: redis
+  redis:
+    host: 8.130.176.200
+    #password: root@123456
+    port: 8009
 server:
   port: 12000

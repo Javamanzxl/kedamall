@@ -1,20 +1,18 @@
 package com.zxl.gulimall.product.app;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.zxl.gulimall.product.entity.SkuSaleAttrValueEntity;
 import com.zxl.gulimall.product.service.SkuSaleAttrValueService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -27,7 +25,7 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("product/skusaleattrvalue")
 public class SkuSaleAttrValueController {
-    @Autowired
+    @Resource
     private SkuSaleAttrValueService skuSaleAttrValueService;
 
     /**
@@ -38,6 +36,16 @@ public class SkuSaleAttrValueController {
         PageUtils page = skuSaleAttrValueService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 远程调用，根据skuId查询销售属性，返回字符串集合
+     * @param skuId
+     * @return
+     */
+    @GetMapping("/stringList/{skuId}")
+    public List<String> getSkuSaleAttrValues(@PathVariable Long skuId){
+        return skuSaleAttrValueService.getSkuSaleAttrValues(skuId);
     }
 
 

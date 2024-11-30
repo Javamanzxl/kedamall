@@ -1,6 +1,6 @@
 package com.zxl.gulimall.product.config;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import com.zxl.gulimall.product.properties.ThreadPoolConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -14,10 +14,12 @@
         <module>gulimall-search</module>
         <module>renren-fast</module>
         <module>gulimall-product</module>
+        <module>gulimall-cart</module>
         <module>gulimall-order</module>
         <module>gulimall-ware</module>
         <module>gulimall-member</module>
         <module>gulimall-coupon</module>
+        <module>gulimall-auth-server</module>
         <module>gulimall-third-party</module>
         <module>renren-generator</module>
     </modules>

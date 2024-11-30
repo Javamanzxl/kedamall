@@ -42,4 +42,10 @@ public class SkuSaleAttrValueServiceImpl extends ServiceImpl<SkuSaleAttrValueDao
     public List<SkuItemSaleAttrsVo> getSaleAttrsBySpuId(Long spuId) {
         return skuSaleAttrValueDao.getSaleAttrsBySpuId(spuId);
     }
+
+    @Override
+    public List<String> getSkuSaleAttrValues(Long skuId) {
+
+        return skuSaleAttrValueDao.getSkuSaleAttrValues(skuId);
+    }
 }

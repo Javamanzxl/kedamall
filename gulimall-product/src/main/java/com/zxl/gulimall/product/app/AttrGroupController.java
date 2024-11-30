@@ -5,15 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.zxl.gulimall.product.entity.AttrEntity;
-import com.zxl.gulimall.product.service.AttrAttrgroupRelationService;
-import com.zxl.gulimall.product.service.AttrService;
-import com.zxl.gulimall.product.service.CategoryService;
+import com.zxl.gulimall.product.service.*;
 import com.zxl.gulimall.product.vo.AttrGroupRelationVo;
 import com.zxl.gulimall.product.vo.AttrGroupWithAttrsVo;
 import org.springframework.web.bind.annotation.*;
 
 import com.zxl.gulimall.product.entity.AttrGroupEntity;
-import com.zxl.gulimall.product.service.AttrGroupService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 

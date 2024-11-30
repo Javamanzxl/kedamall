@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: gulimall-cart
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  thymeleaf:
+    cache: false
+  redis:
+    host: 8.130.176.200
+    #password: root@123456
+    port: 8009
+  session:
+    store-type: redis
+server:
+  port: 1600
+logging:
+  level:
+    com.zxl.gulimall: debug
+
+gulimall:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10

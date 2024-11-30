@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: gulimall-auth-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  thymeleaf:
+    cache: false
+  redis:
+    host: 8.130.176.200
+    #password: root@123456
+    port: 8009
+  session:
+    store-type: redis
+
+server:
+  port: 1500
+#  servlet:
+#    session:
+#      timeout: 30m
+logging:
+  level:
+    com.zxl.gulimall: debug
+oauth2:
+  weibo:
+    client-id: ""
+    client-secret: ""
+    registered-redirect-uri: http://auth.zxl1027.com/oauth2.0/weibo/success
+
+

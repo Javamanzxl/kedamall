@@ -58,9 +58,15 @@
                 </li>
             </ul>
             <ul class="header_ul_right">
-                <li style="border: 0;"><a href="/static/item/../登录页面\index.html" class="aa">你好，请登录</a></li>
-                <li><a href="/static/item/../注册页面\index.html" style="color: red;">免费注册</a> |</li>
-                <li><a href="/static/item/javascript:;" class="aa">我的订单</a> |</li>
+                <li style="border: 0;">
+                    <a href="http://auth.zxl1027.com/login.html" th:if="${session.loginUser==null}" class="aa">你好，请登录</a>
+                    <a th:if="${session.loginUser!=null}" class="aa">欢迎:[[${session.loginUser.nickname}]]</a>
+                </li>
+                <li>
+                    <a href="http://auth.zxl1027.com/reg.html" th:if="${session.loginUser==null}" style="color: red;">免费注册</a>
+                    <span>|</span>
+                </li>
+                <li><a href="/static/item/javascript:;" class="aa">我的订单</a> <span>|</span></li>
                 <li class="jingdong"><a href="/static/item/javascript:;">我的京东</a><span
                         class="glyphicon glyphicon-menu-down">|</span>
                     <ol class="jingdong_ol">
@@ -621,7 +627,7 @@
 
                 <div class="box-btns clear">
                     <div class="box-btns-one">
-                        <input type="text" name="" id="" value="1"/>
+                        <input type="text" name="" id="numInput" value="1"/>
                         <div class="box-btns-one1">
 
                             <div>
@@ -638,8 +644,8 @@
                         </div>
                     </div>
                     <div class="box-btns-two">
-                        <a href="/static/item/../商品分类\index.html">
-                            立即预约
+                        <a href="http://cart.zxl1027.com/addToCart" id="addToCartA" th:attr="skuId=${item.getSkuInfo().getSkuId()}">
+                            加入购物车
                         </a>
                     </div>
                     <div class="box-btns-three">
@@ -1308,7 +1314,7 @@
 <script src="/static/item/js/js.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript"></script>
 <script>
-    $(".sku_attr_value").click(function(){
+    $(".sku_attr_value").click(function () {
         //点击的元素先添加上自定义属性，为了识别刚才被点击了
         var skus = new Array();
         $(this).addClass("clicked");
@@ -1317,21 +1323,27 @@
         skus.push(curr);
         //去掉同一行的所有checked
         $(this).parent().parent().find(".sku_attr_value").removeClass("checked");
-        $("a[class='sku_attr_value checked']").each(function(){
+        $("a[class='sku_attr_value checked']").each(function () {
             skus.push($(this).attr("skus").split(","));
         });
         //取出他们的交集，得到skuId
         var filterEle = skus[0];
-        for(var i =1;i<skus.length;i++){
+        for (var i = 1; i < skus.length; i++) {
             filterEle = $(filterEle).fliter(skus[i]);
         }
         //跳转
-        location.href = "http://item.zxl1027.com/"+filterEle[0]+".html";
+        location.href = "http://item.zxl1027.com/" + filterEle[0] + ".html";
     });
-    $(function(){
-        $(".sku_attr_value").parent().css({"border":"solid 1px #CCC"});
-        $("a[class='sku_attr_value checked']").parent().css({"border":"solid 1px red"});
+    $(function () {
+        $(".sku_attr_value").parent().css({"border": "solid 1px #CCC"});
+        $("a[class='sku_attr_value checked']").parent().css({"border": "solid 1px red"});
     })
+    $("#addToCartA").click(function(){
+        var num = $("#numInput").val();
+        var skuId = $(this).attr("skuId");
+        location.href = "http://cart.zxl1027.com/addToCart?skuId="+skuId+"&num="+num;
+        return false;
+    });
 </script>
 
 </html>

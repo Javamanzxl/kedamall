@@ -1,4 +1,4 @@
-package com.zxl.gulimall.product.config;
+package com.zxl.gulimall.product.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
