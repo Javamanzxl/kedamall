@@ -32,6 +32,7 @@ import com.zxl.common.utils.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.management.relation.Relation;
 import javax.swing.*;
 
 
@@ -64,6 +65,8 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     private WareFeignService wareFeignService;
     @Resource
     private SearchFeignService searchFeignService;
+    @Resource
+    private SkuInfoDao skuInfoDao;
 
     /**
      * 条件查询
@@ -283,5 +286,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             //远程调用失败
             //TODO: 重复调用问题？接口幂等性；重试机制
         }
+    }
+
+    @Override
+    public SpuInfoEntity getSpuInfoBySkuId(Long skuId) {
+        SkuInfoEntity skuInfoEntity = skuInfoDao.selectOne(new LambdaQueryWrapper<SkuInfoEntity>()
+                .eq(SkuInfoEntity::getSkuId, skuId));
+        Long spuId = skuInfoEntity.getSpuId();
+        return spuInfoDao.selectOne(new LambdaQueryWrapper<SpuInfoEntity>()
+                .eq(SpuInfoEntity::getId, spuId));
     }
 }

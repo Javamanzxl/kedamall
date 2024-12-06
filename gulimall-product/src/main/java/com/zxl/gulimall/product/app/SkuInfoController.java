@@ -17,6 +17,7 @@ import com.zxl.gulimall.product.service.SkuInfoService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -29,7 +30,7 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("product/skuinfo")
 public class SkuInfoController {
-    @Autowired
+    @Resource
     private SkuInfoService skuInfoService;
 
     /**

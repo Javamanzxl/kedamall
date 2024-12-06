@@ -98,12 +98,12 @@
                     <a th:if="${session.loginUser!=null}">欢迎:[[${session.loginUser.nickname==null?'':session.loginUser.nickname}]]</a>
                     <a href="http://auth.zxl1027.com/login.html" th:if="${session.loginUser==null}">你好，请登录</a>
                 </li>
-                <li>
-                    <a th:if="${session.loginUser==null}" href="http://auth.zxl1027.com/reg.html" class="li_2">免费注册</a>
+                <li th:if="${session.loginUser==null}">
+                    <a href="http://auth.zxl1027.com/reg.html" class="li_2">免费注册</a>
                 </li>
                 <span>|</span>
                 <li>
-                    <a href="/static/#">我的订单</a>
+                    <a href="http://member.zxl1027.com/memberOrder.html">我的订单</a>
                 </li>
 
 

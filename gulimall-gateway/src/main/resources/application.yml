@@ -59,10 +59,18 @@ spring:
           uri: lb://gulimall-cart
           predicates:
             - Host=cart.zxl1027.com
+        - id: gulimall_order_route
+          uri: lb://gulimall-order
+          predicates:
+            - Host=order.zxl1027.com
         - id: gulimall_auth_route
           uri: lb://gulimall-auth-server
           predicates:
             - Host=auth.zxl1027.com
+        - id: gulimall_member_route
+          uri: lb://gulimall-member
+          predicates:
+            - Host=member.zxl1027.com
 ## 前端/api
 ## http://localhost:88/api/captcha.jpg   http://localhost:8080/renren-fast/captcha.jpg
 ## http://localhost:88/api/product/category/list/tree http://localhost:10000/product/category/list/tree

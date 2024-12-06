@@ -15,9 +15,21 @@
     <update id="addStock">
         update gulimall_wms.wms_ware_sku set stock=stock+#{stock} where sku_id=#{skuId} and ware_id = #{wareId}
     </update>
+    <update id="lockSkuStock">
+        update gulimall_wms.wms_ware_sku set stock_locked = stock_locked+#{num}
+        where sku_id=#{skuId} and ware_id=#{wareId} and stock-wms_ware_sku.stock_locked>=#{num}
+    </update>
+    <update id="releaseLocked">
+        update gulimall_wms.wms_ware_sku set stock_locked = stock_locked-#{skuNum}
+        where sku_id=#{skuId} and ware_id=#{wareId}
+    </update>
     <select id="getSkuStock" resultType="java.lang.Long">
         select SUM(gulimall_wms.wms_ware_sku.stock-gulimall_wms.wms_ware_sku.stock_locked)
         from gulimall_wms.wms_ware_sku where sku_id = #{skuId}
+    </select>
+    <select id="listWareHasStock" resultType="java.lang.Long">
+        select ware_id from gulimall_wms.wms_ware_sku
+        where sku_id=${skuId} and stock-wms_ware_sku.stock_locked>0
     </select>
 
 

@@ -3,18 +3,17 @@ package com.zxl.gulimall.order.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.zxl.common.to.MemberTo;
+import com.zxl.gulimall.order.interceptor.LoginUserInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.zxl.gulimall.order.entity.OrderEntity;
 import com.zxl.gulimall.order.service.OrderService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -27,8 +26,19 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("order/order")
 public class OrderController {
-    @Autowired
+    @Resource
     private OrderService orderService;
+
+    /**
+     * 分页查询登陆用户的订单信息
+     * @param params
+     * @return
+     */
+    @PostMapping("listWithItem")
+    public R listWithItem(@RequestBody Map<String, Object> params){
+        PageUtils page = orderService.queryPageWithItem(params);
+        return R.ok().put("page", page);
+    }
 
     /**
      * 列表
@@ -38,6 +48,18 @@ public class OrderController {
         PageUtils page = orderService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 远程调用，根据orderSn查询订单信息
+     * @param orderSn
+     * @return
+     */
+
+    @GetMapping("/getOrder/{orderSn}")
+    public R getOrderByOrderSn(@PathVariable String orderSn){
+        OrderEntity order = orderService.getOrderByOrderSn(orderSn);
+        return R.ok().setData(order);
     }
 
 

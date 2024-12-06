@@ -1,5 +1,9 @@
 package com.zxl.gulimall.order.service.impl;
 
+import com.rabbitmq.client.Channel;
+import com.zxl.gulimall.order.entity.OrderEntity;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -25,5 +29,7 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemDao, OrderItemEnt
 
         return new PageUtils(page);
     }
+
+
 
 }

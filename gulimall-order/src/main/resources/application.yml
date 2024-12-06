@@ -10,11 +10,62 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+  redis:
+    host: 8.130.176.200
+    #password: root@123456
+    port: 8009
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  session:
+    store-type: redis
+  rabbitmq:
+    host: 8.130.176.200
+    port: 5672
+    virtual-host: /
+    # 开启发送端确认
+    publisher-confirm-type: correlated
+    # 开启发送端消息抵达队列的确认
+    publisher-returns: true
+    # 只要抵达队列，以异步发送优先回调returnConfirm
+    template:
+      mandatory: true
+    # 手动ack消息
+    listener:
+      simple:
+        acknowledge-mode: manual
+  thymeleaf:
+    cache: false
+  mvc:
+    format:
+      date-time: yyyy-MM-dd HH:mm:ss
+
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto
 
+logging:
+  level:
+    com.zxl.gulimall: debug
+
 server:
   port: 9000
+
+gulimall:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10
+
+alipay:
+  app-id: 9021000142649674
+  merchant_private_key: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCvZ+pgOjB/iU0MZOm/jy9l8d8SkLuMUsh+c03+oq/syZZMnMOzjfURGivjSUVVJSfPuDOkcecxEQJsMjKgXmm48esqOJaoOXiYV25gClTw/0mEOKZXgeMyRCzstRGPiMdu6kjUmP5lJGgUXG2BcI8PvoFdySOsPZ3m95lhFj2ulxVnxokdytM1KvvPkp8vXqQviWuagPo+Gxf6lIL/27sk8V2nFQ0JeFMg9UHF/z3pXnu27p8av11BMOXr+c0KX6TyqkbHdPYbh/sLh9z0L8xkFYJOnN4d139YuX7yUGTcB2pJmmY8yTZ1etNm1Ge1DCvsdEBHoGQcFgE39B9mHAqdAgMBAAECggEAMZ8IIujTR4EkFtmFdveexQxDuxDOvce9iGg+LEcB1c7BgjLm+iiyp3/r4oSb5JZ6SL0nfuHqMWtKcClTQSL0bamiiXMwy65We2JgizLhDLxro8gS5raL+3Bl9SDUMvLS2IHW0K3nad1+xCPRpsic8CtIlauNN/DGdsycy2ZrVLRZEZo/PvacGj7Si30vTWvN5HAyIdQgdGzKX7jmJni3P5D+60+oNcmQAuv/AAsosPjchZjbEgc0U1gTKlNc11/LcamvnkRscIX28Xvn/X/YYsfU4vnDEM4kcM9K/G3aD2IOGqnoFPh9ps3Qd/NzhKiX1DuyWL2SqeOdFwf+XJAmUQKBgQDcSR6DmlOgNl6SLaR4N0S6H+Szjl2W0QxMuy8+IPvLgesXqc+GQeMPpTGM/InhrvxTyg4A4KwZXHaI7En6XJcMF5GL2SPziwALNUMCCdcxq65VGMdeGXy+YVluXOEnGdRwiSpArrZWhRVc4m9l88h+Esm9J2roSx1oRAKpmo7djwKBgQDL2BRR081t3Fk+PlnQ4b6gGin1RYxaThxXo99caHkgLol4W0vGOJ5L+4QNbwOShOzSnP42kmo5Foqp2TXh4pOXO+cPGuNWVp1fzLrPaGM89JpTcn9PYKFg0m3D3tOCED2BHYD0W9wosHH0lliWRaddsoNfVFlWYGCAuYxPrWpXEwKBgQDXV1tPB1Rsr/mvKJM5Ob4jvP3TUX7H6j/92paKQ7Ah9zUcgtHtywbuymwwCMe5KVhdiI476WYTvMHbhDGlX1IBbiDH91Mfx2gZjM2edoQ5eD0JzxlGMeAyM/Q64OzxTlzQTiZR6PkyhxKlJG4F2lTKeg9gq+Hkh1mODb4UkpTKnQKBgEgZKTa3/1T4Nuh5DTOAZPgjyOtjqfzW29dzsrDwksb7LsxPHkICDJs7Xr2RomXUdh8YQCH1L3T5sBnbJd+7UBCRs2v4SqhjAk68DucFOPR6X4tcWAMvXmTsiL5atdyu+dINKWtEgl4x6lxkQPkFsejGFwlEwER42iktd59G6vHZAoGAR04EiVuMhMnBUFnXiuMaBbjjNLzZ5rVODykZxipwXvBRJKSogLh7g3+tAo4OITYP1mvJTlhBdjda4fj1x1iIvQLY4cV/N1P8VH18gQfjes7uqouHueegPTBF97Img84GBK+xEVUrLaAzEKm9Q16aviKjmRHtlzkt+X5jyewZbyU=
+  alipay-public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw6d5xFTHMsyFVmYw7i2vEcWYJErHcrLVIScozgmVcDCMLDvilo/QD1IuFEDiq2mcedYjzTw637RO5IwYk+fSqmI1CgFyNy0z7SzdKG7/Ik8G06QVonomgdmZKjMERWSjKSHTEbglaucWRttuzez9OKOiiVTpGSUF0msVPWV9Ck7IVkaeuAcG6w9oMZ9C3CMmjBU1AZz5WpRwonALJ0j4oD9I/XimQMzvVvRORYWAjb8yrsbS6foYfeB5UVSboyFeS+PXV8fKC76EvhHqboj2OBxyeOXp6ZX95DVNUzkDX46J9RfMBFYDJCCVeuLDXTpDpEk3JJ1q0CWOEdRYEZNhqwIDAQAB
+  gateway-url: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+  notify-url: http://9b4bbc.natappfree.cc/payed/notify
+  return-url: http://member.zxl1027.com/memberOrder.html
+  charset: utf-8
+  sign-type: RSA2
+  time-out: 30m

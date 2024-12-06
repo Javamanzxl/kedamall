@@ -27,8 +27,6 @@ spring:
       cache-null-values: true
   session:
     store-type: redis
-
-
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:

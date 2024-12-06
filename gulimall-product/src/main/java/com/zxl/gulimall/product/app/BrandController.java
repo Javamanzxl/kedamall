@@ -18,6 +18,7 @@ import com.zxl.gulimall.product.service.BrandService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -30,8 +31,18 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("product/brand")
 public class BrandController {
-    @Autowired
+    @Resource
     private BrandService brandService;
+
+    /**
+     * 根据id查品牌名字
+     * @param brandId
+     * @return
+     */
+    @GetMapping("getBrandNameById/{brandId}")
+    public String getBrandNameById(@PathVariable Long brandId){
+        return brandService.getBrandNameById(brandId);
+    }
 
     /**
      * 列表

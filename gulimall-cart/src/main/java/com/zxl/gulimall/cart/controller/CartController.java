@@ -11,10 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -27,6 +29,16 @@ import java.util.concurrent.ExecutionException;
 public class CartController {
     @Resource
     private CartService cartService;
+
+    /**
+     * 远程调用，获取当前用户购物车信息
+     * @return
+     */
+    @GetMapping("/currentUserCartItems")
+    @ResponseBody
+    public List<CartItem> getCurrentUserCartItems(){
+        return cartService.getCurrentUserCartItems();
+    }
 
     /***
      * 浏览器有一个cookie: user-key:标识用户身份，一个月后过期

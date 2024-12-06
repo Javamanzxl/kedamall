@@ -202,4 +202,27 @@ public class CartServiceImpl implements CartService {
         BoundHashOperations<String, Object, Object> cartOps = getCartOps();
         cartOps.delete(skuId.toString());
     }
+
+    /**
+     * 远程调用，获取当前用户购物车信息
+     * @return
+     */
+    @Override
+    public List<CartItem> getCurrentUserCartItems() {
+        UserInfoTo userInfo = CartInterceptor.threadLocal.get();
+        if(userInfo.getUserId()==null){
+            return null;
+        }
+        List<CartItem> cartItems = getCartItems(CartConstant.CART_PREFIX + userInfo.getUserId());
+        //获取被选中的购物项
+        if(cartItems!=null){
+            return cartItems.stream().map(item->{
+                //更新价格
+                SkuInfoTo skuInfoTo = productFeignService.infoBySkuId(item.getSkuId());
+                item.setPrice(skuInfoTo.getPrice());
+                return item;
+            }).filter(CartItem::isCheck).toList();
+        }
+        return null;
+    }
 }

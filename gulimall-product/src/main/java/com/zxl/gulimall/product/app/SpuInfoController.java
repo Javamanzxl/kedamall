@@ -3,6 +3,7 @@ package com.zxl.gulimall.product.app;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.zxl.gulimall.product.dao.SpuInfoDao;
 import com.zxl.gulimall.product.vo.SpuSaveVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import com.zxl.gulimall.product.service.SpuInfoService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -24,8 +26,18 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("product/spuinfo")
 public class SpuInfoController {
-    @Autowired
+    @Resource
     private SpuInfoService spuInfoService;
+
+    /**
+     * 远程调用，根据skuId查询spu信息
+     * @param skuId
+     * @return
+     */
+    @GetMapping("/getSpuInfoBySkuId/{skuId}")
+    public SpuInfoEntity getSpuInfoBySkuId(@PathVariable Long skuId){
+        return spuInfoService.getSpuInfoBySkuId(skuId);
+    }
 
     /**
      * 列表

@@ -29,7 +29,7 @@
                 <a style="color: red;" th:if="${session.loginUser!=null}">你好:[[${session.loginUser.nickname}]]</a>
                 <li><a href="http://auth.zxl1027.com/reg.html" th:if="session.loginUser==null">免费注册</a></li>
                 <li class="spacer"></li>
-                <li><a href="">我的订单</a></li>
+                <li><a href="http://member.zxl1027.com/memberOrder.html">我的订单</a></li>
                 <li class="spacer"></li>
 
             </ul>
@@ -223,7 +223,7 @@
 <script src="/static/cart/js/index.js" charset="utf-8"></script>
 <script type="text/javascript">
     function toTrade() {
-        window.location.href = "http://cart.gmall.com:8087/toTrade";
+        window.location.href = "http://order.zxl1027.com/toTrade";
     }
 
     function toItem(skuId) {

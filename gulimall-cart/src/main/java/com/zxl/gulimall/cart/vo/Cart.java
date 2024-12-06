@@ -48,7 +48,9 @@ public class Cart {
         BigDecimal amount = new BigDecimal("0");
         if(items!=null && !items.isEmpty()){
             for (CartItem item : items) {
-                amount = amount.add(item.getTotalPrice());
+                if(item.isCheck()){
+                    amount = amount.add(item.getTotalPrice());
+                }
             }
         }
         amount = amount.subtract(this.getReduce());

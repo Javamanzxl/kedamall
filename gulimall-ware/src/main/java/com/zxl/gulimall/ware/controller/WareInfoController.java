@@ -1,20 +1,19 @@
 package com.zxl.gulimall.ware.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.zxl.gulimall.ware.vo.FareVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.zxl.gulimall.ware.entity.WareInfoEntity;
 import com.zxl.gulimall.ware.service.WareInfoService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -27,9 +26,19 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("ware/wareinfo")
 public class WareInfoController {
-    @Autowired
+    @Resource
     private WareInfoService wareInfoService;
 
+    /**
+     * 根据用户地址计算运费
+     * @param attrId
+     * @return
+     */
+    @GetMapping("/getFare")
+    public R getFare(@RequestParam("addrId") Long attrId){
+        FareVo fare = wareInfoService.getFare(attrId);
+        return R.ok().setData(fare);
+    }
     /**
      * 列表
      */

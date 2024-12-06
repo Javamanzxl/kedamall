@@ -12,11 +12,43 @@ spring:
         server-addr: localhost:8848
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  rabbitmq:
+    host: 8.130.176.200
+    port: 5672
+    virtual-host: /
+    # 开启发送端确认
+    publisher-confirm-type: correlated
+    # 开启发送端消息抵达队列的确认
+    publisher-returns: true
+    # 只要抵达队列，以异步发送优先回调returnConfirm
+    template:
+      mandatory: true
+    # 手动ack消息
+    listener:
+      simple:
+        acknowledge-mode: manual
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto
+
+#seata:
+#  tx-service-group: my_test_tx_group  # 与nacos事务分组配置项保持一致
+#  registry:  # 注册中心
+#    type: nacos
+#    nacos:
+#      application: seata-server      # seata-server注册在nacos中的服务名
+#      server-addr: 127.0.0.1:8848    # nacos的地址端口
+#      group: SEATA_GROUP            # seata-server在nacos的分组
+#  config:  # 配置中心
+#    type: nacos
+#    nacos:
+#      server-addr: 127.0.0.1:8848
+#      group: SEATA_GROUP
+#      namespace: 971d2946-d776-4634-b9c5-c6d0999cd54a    # 与配置项命名空间ID保持一致
+#      dataId: seataServer.properties       # 与配置项Data Id保持一致
+#  enabled: true
 
 server:
   port: 11000

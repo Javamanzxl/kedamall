@@ -4,8 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.zxl.common.exception.ErrorCodeEnum;
+import com.zxl.common.exception.NoStockException;
 import com.zxl.common.to.SkuHasStockTo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zxl.gulimall.ware.vo.WareSkuLockVo;
 import org.springframework.web.bind.annotation.*;
 
 import com.zxl.gulimall.ware.entity.WareSkuEntity;
@@ -28,6 +30,22 @@ import javax.annotation.Resource;
 public class WareSkuController {
     @Resource
     private WareSkuService wareSkuService;
+
+    /**
+     * 锁定库存
+     *
+     * @param vo
+     * @return
+     */
+    @PostMapping("/lock/order")
+    public R orderLockStock(@RequestBody WareSkuLockVo vo) {
+        try {
+            Boolean result = wareSkuService.orderLockStock(vo);
+            return R.ok().setData(result);
+        } catch (NoStockException e) {
+            return R.error(ErrorCodeEnum.NO_STOCK_EXCEPTION.getCode(), ErrorCodeEnum.NO_STOCK_EXCEPTION.getMessage());
+        }
+    }
 
     /**
      * 列表
@@ -81,6 +99,7 @@ public class WareSkuController {
 
     /**
      * 查询sku是否有库存
+     *
      * @param skuIds
      * @return
      */
@@ -88,8 +107,9 @@ public class WareSkuController {
     public List<SkuHasStockTo> getSkusHasStock(@RequestBody List<Long> skuIds) {
         return wareSkuService.getSkusHasStock(skuIds);
     }
+
     @GetMapping("{skuId}/hasStock")
-    public boolean hasStockBySkuId(@PathVariable Long skuId){
+    public boolean hasStockBySkuId(@PathVariable Long skuId) {
         return wareSkuService.hasStockBySkuId(skuId);
     }
 

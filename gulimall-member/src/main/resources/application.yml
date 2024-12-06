@@ -10,11 +10,28 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+  redis:
+    host: 8.130.176.200
+    #password: root@123456
+    port: 8009
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  session:
+    store-type: redis
+  thymeleaf:
+    cache: false
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
     db-config:
       id-type: auto
+      
+gulimall:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10
 
 server:
   port: 8000

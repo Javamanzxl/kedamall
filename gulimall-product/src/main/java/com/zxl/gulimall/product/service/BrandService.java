@@ -23,5 +23,7 @@ public interface BrandService extends IService<BrandEntity> {
     void updateCascade(BrandEntity brand);
 
     List<BrandEntity> getBrandIds(List<Long> brandIds);
+
+    String getBrandNameById(Long brandId);
 }
 
