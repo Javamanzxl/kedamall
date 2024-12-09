@@ -35,6 +35,12 @@ spring:
             - Path=/api/ware/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: coupon_route
+          uri: lb://gulimall-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
         - id: third_party_route
           uri: lb://gulimall-third-party
           predicates:
@@ -71,6 +77,10 @@ spring:
           uri: lb://gulimall-member
           predicates:
             - Host=member.zxl1027.com
+        - id: gulimall_seckill_route
+          uri: lb://gulimall-seckill
+          predicates:
+            - Host=seckill.zxl1027.com
 ## 前端/api
 ## http://localhost:88/api/captcha.jpg   http://localhost:8080/renren-fast/captcha.jpg
 ## http://localhost:88/api/product/category/list/tree http://localhost:10000/product/category/list/tree

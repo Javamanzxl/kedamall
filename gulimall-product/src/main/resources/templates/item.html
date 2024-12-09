@@ -15,8 +15,8 @@
         <!--品牌官方网站-->
         <div class="min">
             <ul class="header_ul_left">
-                <li class="glyphicon glyphicon-home"><a href="/static/item/shouye.html" class="aa">京东首页</a></li>
-                <li class="glyphicon glyphicon-map-marker"><a href="/static/item/javascript:;">北京</a>
+                <li class="glyphicon glyphicon-home"><a style="margin-left: 10px" href="http://zxl1027.com" class="aa">商城首页</a></li>
+                <li class="glyphicon glyphicon-map-marker"><a style="margin-left: 10px" href="/static/item/javascript:;">北京</a>
                     <ol id="beijing">
                         <li style="background: red;"><a href="/static/item/javascript:;" style="color: white;">北京</a>
                         </li>
@@ -266,7 +266,7 @@
                 <div class="nav_top_two"><input type="text"/>
                     <button>搜索</button>
                 </div>
-                <div class="nav_top_three"><a href="/static/item/../JD_Shop/One_JDshop.html">我的购物车</a><span
+                <div class="nav_top_three"><a href="http://cart.zxl1027.com/cart.html">我的购物车</a><span
                         class="glyphicon glyphicon-shopping-cart"></span>
                     <div class="nav_top_three_1">
                         <img src="/static/item/img/44.png"/>购物车还没有商品，赶紧选购吧！
@@ -521,8 +521,13 @@
                             <span>￥</span>
                             <span th:text="${#numbers.formatDecimal(item.getSkuInfo().getPrice(),3,2)}">4499.00</span>
                         </li>
-                        <li>
-                            预约享资格
+                        <li style="color: red" th:if="${item.getSeckillInfo()!=null}">
+                            <span th:if="${#dates.createNow().getTime() < item.seckillInfo.startTime}">
+                                商品将会在[[${#dates.format(new java.util.Date(item.seckillInfo.startTime),"yyyy-MM-dd HH:mm:ss")}]进行秒杀
+                            </span>
+                            <span th:if="${#dates.createNow().getTime()>=item.seckillInfo.startTime && #dates.createNow().getTime()<=item.seckillInfo.endTime}">
+                                商品正在秒杀,秒杀价[[${#numbers.formatDecimal(item.seckillInfo.seckillPrice,1,2)}]]
+                            </span>
                         </li>
                         <li>
                             <a href="/static/item/">
@@ -643,7 +648,12 @@
 
                         </div>
                     </div>
-                    <div class="box-btns-two">
+                    <div class="box-btns-two" th:if="${item.getSeckillInfo!=null && (#dates.createNow().getTime()>=item.seckillInfo.startTime && #dates.createNow().getTime()<=item.seckillInfo.endTime)}">
+                        <a href="#" id="seckillA" th:attr="skuId=${item.getSkuInfo().getSkuId()},sessionId=${item.getSeckillInfo().getPromotionSessionId()},code=${item.getSeckillInfo().getRandomCode()}">
+                            立即抢购
+                        </a>
+                    </div>
+                    <div class="box-btns-two" th:if="${item.getSeckillInfo==null || (#dates.createNow().getTime()<item.seckillInfo.startTime && #dates.createNow().getTime()>item.seckillInfo.endTime)}">
                         <a href="http://cart.zxl1027.com/addToCart" id="addToCartA" th:attr="skuId=${item.getSkuInfo().getSkuId()}">
                             加入购物车
                         </a>
@@ -1344,6 +1354,19 @@
         location.href = "http://cart.zxl1027.com/addToCart?skuId="+skuId+"&num="+num;
         return false;
     });
+    $("#seckillA").click(function(){
+        var isLogin = [[${session.loginUser!=null}]];
+        if(isLogin){
+            var killId = $(this).attr("sessionId")+"_"+$(this).attr("skuId");
+            var key = $(this).attr("code");
+            var num = $("#numInput").val();
+            location.href="http://seckill.zxl1027.com/kill?killId="+killId+"&key="+key+"&num="+num;
+        }else{
+            alert("秒杀请先登陆");
+        }
+
+        return false;
+    })
 </script>
 
 </html>

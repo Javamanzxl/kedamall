@@ -7,6 +7,7 @@ import com.zxl.common.constant.OrderConstant;
 import com.zxl.common.exception.NoStockException;
 import com.zxl.common.to.MemberTo;
 import com.zxl.common.to.OrderTo;
+import com.zxl.common.to.mq.SeckillOrderTo;
 import com.zxl.common.utils.R;
 import com.zxl.gulimall.order.dao.PaymentInfoDao;
 import com.zxl.gulimall.order.entity.OrderItemEntity;
@@ -165,8 +166,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 //2.验价
                 BigDecimal payAmount = order.getPayPrice();
                 BigDecimal price = orderSubmitVo.getPayPrice();
-                if(Math.abs(
-                        payAmount.subtract(price).doubleValue())<0.01){
+                if (Math.abs(
+                        payAmount.subtract(price).doubleValue()) < 0.01) {
                     //金额对比成功
                     //3.保存订单
                     saveOrder(order);
@@ -186,19 +187,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                     //为了保证高并发，库存服务自己回滚。如果失败了可以发消息给库存服务
                     //库存服务本身也可以使用自动解锁模式，消息队列
                     R r = wareFeignService.orderLockStock(wareSkuLockVo);
-                    if(r.getCode()==0){
+                    if (r.getCode() == 0) {
                         //锁成功
                         res.setOrderEntity(order.getOrder());
                         //订单创建成功，给MQ发消息
                         rabbitTemplate.convertAndSend("order-event-exchange",
-                                "order.create.order",order.getOrder());
+                                "order.create.order", order.getOrder());
                         return res;
-                    }else{
+                    } else {
                         //锁失败
                         String msg = (String) r.get("msg");
                         throw new NoStockException(msg);
                     }
-                }else{
+                } else {
                     //金额对比失败
                     res.setCode(3);
                     return res;
@@ -221,6 +222,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 保存订单数据
+     *
      * @param order
      */
     private void saveOrder(OrderCreateTo order) {
@@ -257,6 +259,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 计算价格积分等相关信息
+     *
      * @param order
      * @param orderItems
      */
@@ -385,6 +388,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 远程调用，根据orderSn查询订单信息
+     *
      * @param orderSn
      * @return
      */
@@ -396,6 +400,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 关闭订单功能
+     *
      * @param order
      */
     @Override
@@ -405,19 +410,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         OrderEntity dbOrder = orderDao.selectOne(new LambdaQueryWrapper<OrderEntity>()
                 .eq(OrderEntity::getOrderSn, orderSn));
         //关单
-        if(dbOrder!=null && dbOrder.getStatus()==OrderStatusEnum.CREATE_NEW.getCode()){
+        if (dbOrder != null && dbOrder.getStatus() == OrderStatusEnum.CREATE_NEW.getCode()) {
             OrderEntity updateOrder = new OrderEntity();
             updateOrder.setStatus(OrderStatusEnum.CANCLED.getCode());
             updateOrder.setId(dbOrder.getId());
             orderDao.updateById(updateOrder);
             //关闭订单后再给解锁库存发个消息
             OrderTo orderTo = new OrderTo();
-            BeanUtils.copyProperties(order,orderTo);
-            try{
+            BeanUtils.copyProperties(order, orderTo);
+            try {
                 //TODO: 保证消息一定会发送出去，每一个消息做好日志记录(给数据库保存每一个消息的详细信息)
                 //TODO: 定期扫描数据库将失败的消息重新发送
-                rabbitTemplate.convertAndSend("order-event-exchange","order.release.other",orderTo);
-            }catch (Exception e){
+                rabbitTemplate.convertAndSend("order-event-exchange", "order.release.other", orderTo);
+            } catch (Exception e) {
                 //TODO: 将没发送成功的消息进行重试发送
             }
         }
@@ -425,6 +430,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 获取当前订单的支付信息
+     *
      * @param orderSn
      * @return
      */
@@ -446,6 +452,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 查询登陆用户的订单信息
+     *
      * @param params
      * @return
      */
@@ -456,8 +463,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         IPage<OrderEntity> page = this.page(
                 new Query<OrderEntity>().getPage(params),
                 new LambdaQueryWrapper<OrderEntity>()
-                        .eq(OrderEntity::getMemberId,memberId).orderByDesc(OrderEntity::getId));
-        if(page!=null){
+                        .eq(OrderEntity::getMemberId, memberId).orderByDesc(OrderEntity::getId));
+        if (page != null) {
             List<OrderEntity> orderList = page.getRecords().stream().map(order -> {
                 List<OrderItemEntity> orderItems = orderItemService.list(new LambdaQueryWrapper<OrderItemEntity>()
                         .eq(OrderItemEntity::getOrderSn, order.getOrderSn()));
@@ -472,6 +479,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 处理支付宝支付结果
+     *
      * @param vo
      * @return
      */
@@ -486,11 +494,39 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         paymentInfoDao.insert(paymentInfo);
         //2.修改订单状态信息
         String tradeStatus = vo.getTrade_status();
-        if(tradeStatus.equals("TRADE_SUCCESS")||tradeStatus.equals("TRADE_FINISHED")){
+        if (tradeStatus.equals("TRADE_SUCCESS") || tradeStatus.equals("TRADE_FINISHED")) {
             String orderSn = vo.getOut_trade_no();
-            orderDao.updateOrderStatus(orderSn,OrderStatusEnum.PAYED.getCode());
+            orderDao.updateOrderStatus(orderSn, OrderStatusEnum.PAYED.getCode());
             return "success";
         }
         return "false";
+    }
+
+    /**
+     * 创建秒杀订单
+     *
+     * @param seckillOrderTo
+     */
+    @Override
+    public void createSeckillOrder(SeckillOrderTo seckillOrderTo) {
+        //保存订单信息
+        OrderEntity order = new OrderEntity();
+        order.setOrderSn(seckillOrderTo.getOrderSn());
+        order.setMemberId(seckillOrderTo.getMemberId());
+        order.setStatus(OrderStatusEnum.CREATE_NEW.getCode());
+        BigDecimal multiply = seckillOrderTo.getSeckillPrice().multiply(new BigDecimal(seckillOrderTo.getNum().toString()));
+        order.setPayAmount(multiply);
+        orderDao.insert(order);
+        //保存订单项目信息
+        OrderItemEntity orderItem = new OrderItemEntity();
+        orderItem.setOrderSn(seckillOrderTo.getOrderSn());
+        orderItem.setRealAmount(multiply);
+        orderItem.setSkuQuantity(seckillOrderTo.getNum());
+        SpuInfoVo spuInfo = productFeignService.getSpuInfoBySkuId(seckillOrderTo.getSkuId());
+        orderItem.setSpuPic(spuInfo.getSpuDescription());
+        orderItem.setSpuName(spuInfo.getSpuName());
+        orderItem.setSpuId(spuInfo.getId());
+        orderItem.setCategoryId(spuInfo.getCatalogId());
+        orderItemService.save(orderItem);
     }
 }

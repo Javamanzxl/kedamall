@@ -1,20 +1,22 @@
 package com.zxl.gulimall.coupon.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.zxl.gulimall.coupon.entity.SeckillSessionEntity;
 import com.zxl.gulimall.coupon.service.SeckillSessionService;
 import com.zxl.common.utils.PageUtils;
 import com.zxl.common.utils.R;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -27,8 +29,18 @@ import com.zxl.common.utils.R;
 @RestController
 @RequestMapping("coupon/seckillsession")
 public class SeckillSessionController {
-    @Autowired
+    @Resource
     private SeckillSessionService seckillSessionService;
+
+    /**
+     * 获取最近三天的秒杀活动
+     * @return
+     */
+    @GetMapping("/latest3DaySession")
+    public R getLatest3DaySession(){
+        List<SeckillSessionEntity> seckillSessions =  seckillSessionService.getLatest3DaySession();
+        return R.ok().setData(seckillSessions);
+    }
 
     /**
      * 列表
@@ -55,8 +67,8 @@ public class SeckillSessionController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody SeckillSessionEntity seckillSession){
-		seckillSessionService.save(seckillSession);
+    public R save(@RequestBody SeckillSessionEntity seckillSession) throws ParseException {
+        seckillSessionService.save(seckillSession);
 
         return R.ok();
     }

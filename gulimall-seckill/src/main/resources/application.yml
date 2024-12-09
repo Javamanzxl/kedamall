@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: gulimall-seckill
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
+  redis:
+    host: 8.130.176.200
+    #password: root@123456
+    port: 8009
+  session:
+    store-type: redis
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 50
+  rabbitmq:
+    host: 8.130.176.200
+    port: 5672
+    virtual-host: /
+    # 开启发送端确认
+    publisher-confirm-type: correlated
+    # 开启发送端消息抵达队列的确认
+    publisher-returns: true
+    # 只要抵达队列，以异步发送优先回调returnConfirm
+    template:
+      mandatory: true
+    # 手动ack消息
+    listener:
+      simple:
+        acknowledge-mode: manual
+
+
+server:
+  port: 25000
+logging:
+  level:
+    com.zxl.gulimall: debug

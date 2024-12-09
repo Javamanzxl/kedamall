@@ -21,5 +21,7 @@ public class SkuItemVo {
     private List<SkuItemSaleAttrsVo> saleAttrs;
     private SpuInfoDescEntity spuInfoDesc;
     private List<SpuItemAttrGroupVo> attrGroups;
+    //当前商品的秒杀信息
+    private SeckillInfoVo seckillInfo;
 
 }
