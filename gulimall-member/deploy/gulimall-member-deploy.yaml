@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gulimall-member
+  namespace: gulimall
+  labels:
+    app: gulimall-member
+# 规格
+spec:
+  # 副本数
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gulimall-member
+  template:
+    metadata:
+      labels:
+        app: gulimall-member
+    spec:
+      containers:
+        - name: gulimall-member
+          image: $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          imagePullPolicy: IfNotPresent
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: gulimall-member
+  namespace: gulimall
+  labels:
+    app: gulimall-member
+spec:
+  ports:
+    - name: http-8080
+      protocol: TCP
+      # service端口
+      port: 8080
+      # 容器端口
+      targetPort: 8080
+      # 外部端口
+      nodePort: 30006
+
+  selector:
+    app: gulimall-member
+  type: NodePort
+  sessionAffinity: None
+

@@ -1,0 +1,107 @@
+pipeline {
+  agent {
+    node {
+      label 'maven'
+    }
+
+  }
+
+  parameters {
+      string(name:'PROJECT_VERSION',defaultValue: 'v0.0Beta',description:'')
+      string(name:'PROJECT_NAME',defaultValue: '',description:'')
+  }
+
+  environment {
+      DOCKER_CREDENTIAL_ID = 'aliyun-hub-id'
+      GITHUB_CREDENTIAL_ID = 'github-id'
+      KUBECONFIG_CREDENTIAL_ID = 'zxl-kubeconfig'
+      REGISTRY = 'crpi-lc1ruhbny3kf5skr.cn-hangzhou.personal.cr.aliyuncs.com'
+      DOCKERHUB_NAMESPACE = 'gulimall_zxl'
+      GITHUB_ACCOUNT = 'Javamanzxl'
+      SONAR_CREDENTIAL_ID = 'sonar-token'
+      BRANCH_NAME = 'master'
+  }
+
+  stages {
+    stage('拉取代码') {
+      steps {
+        git(url: 'https://github.com/Javamanzxl/gulimall.git', credentialsId: 'github-id', branch: 'master', changelog: true, poll: false)
+        sh 'echo 正在构建 $PROJECT_NAME  版本号：$PROJECT_VERSION 将会提交给 $REGISTRY/$DOCKERHUB_NAMESPACE 镜像仓库'
+      }
+    }
+
+    stage('sonar代码质量分析') {
+      steps {
+                container ('maven') {
+          sh "mvn clean install -Dmaven.test.skip=true -gs `pwd`/mvn-settings.xml"
+        }
+        container ('maven') {
+          withCredentials([string(credentialsId: "$SONAR_CREDENTIAL_ID", variable: 'SONAR_TOKEN')]) {
+            withSonarQubeEnv('sonar') {
+             sh "echo 当前目录 `pwd`"
+             sh "mvn sonar:sonar -gs `pwd`/mvn-settings.xml -Dsonar.login=$SONAR_TOKEN"
+            }
+          }
+          timeout(time: 1, unit: 'HOURS') {
+            waitForQualityGate abortPipeline: true
+          }
+        }
+      }
+    }
+
+    stage ('构建镜像 & 推送快照镜像') {
+      steps {
+          container ('maven') {
+              sh 'mvn  -Dmaven.test.skip=true -gs `pwd`/mvn-settings.xml clean package'
+              sh "echo 当前目录 `pwd`"
+              sh 'cd $PROJECT_NAME && docker build -f Dockerfile -t $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER .'
+              withCredentials([usernamePassword(passwordVariable : 'DOCKER_PASSWORD' ,usernameVariable : 'DOCKER_USERNAME' ,credentialsId : "$DOCKER_CREDENTIAL_ID" ,)]) {
+                  sh 'echo "$DOCKER_PASSWORD" | docker login $REGISTRY -u "$DOCKER_USERNAME" --password-stdin'
+                  sh 'docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER'
+              }
+          }
+      }
+    }
+
+    stage('推送最新镜像'){
+        when{
+            branch 'master'
+        }
+       steps{
+            container ('maven') {
+              sh 'docker tag  $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:latest '
+              sh 'docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:latest '
+            }
+       }
+    }
+
+    stage('部署到k8s') {
+      steps {
+        input(id: "deploy-to-dev-$PROJECT_NAME", message: "是否将 $PROJECT_NAME 部署到集群中?")
+        kubernetesDeploy(configs: "$PROJECT_NAME/deploy/**", enableConfigSubstitution: true, kubeconfigId: "$KUBECONFIG_CREDENTIAL_ID")
+      }
+    }
+
+    stage('发布版本'){
+      when{
+        expression{
+          return params.PROJECT_VERSION =~ /v.*/
+        }
+      }
+      steps {
+          container ('maven') {
+            input(id: 'release-image-with-tag', message: '发布当前版本镜像吗?')
+              withCredentials([usernamePassword(credentialsId: "$GITHUB_CREDENTIAL_ID", passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                sh 'git config --global user.email "1050295916@qq.com" '
+                sh 'git config --global user.name "ZXL" '
+                sh 'git tag -a $PROJECT_VERSION-$PROJECT_NAME -m "$PROJECT_VERSION" '
+                sh 'git push http://$GIT_USERNAME:$GIT_PASSWORD@gitee.com/$GITHUB_ACCOUNT/gulimall.git --tags --ipv4'
+              }
+            sh 'docker tag  $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:$PROJECT_VERSION '
+            sh 'docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:$PROJECT_VERSION '
+          }
+      }
+    }
+
+  }
+}

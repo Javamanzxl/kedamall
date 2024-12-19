@@ -27,6 +27,10 @@ import javax.sql.DataSource;
  * 二、异步任务：自动配置类TaskExecutionAutoConfiguration
  * 		1.@EnableAsync 开启异步任务功能
  * 		2.@Async 给希望异步任务的方法上标注
+ * 三、整合sentinel
+ * 		1.导入依赖
+ * 		2.下载sentinel控制台
+ * 		3.配置sentinel控制台地址信息
  *
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})

@@ -8,6 +8,13 @@
     <name>gulimall</name>
     <description>聚合服务</description>
     <packaging>pom</packaging>
+    <properties>
+        <!-- Sonar -->
+        <!-- 代码覆盖率报告的目标文件必须设置为相同的值在父节点和每个模块节点中。然后JaCoCo会把信息加进去同样的报告，这样，它将给出跨模块的代码覆盖率。 -->
+        <!--suppress UnresolvedMavenProperty -->
+        <sonar.jacoco.reportPaths>${PWD}/./target/jacoco.exec</sonar.jacoco.reportPaths>
+        <sonar.groovy.binaries>target/classes</sonar.groovy.binaries>
+    </properties>
     <modules>
         <module>gulimall-common</module>
         <module>gulimall-gateway</module>
@@ -24,4 +31,47 @@
         <module>gulimall-third-party</module>
         <module>renren-generator</module>
     </modules>
+    <!--sonarqube analysis plugins-->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.2</version>
+                <configuration>
+                    <append>true</append>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>agent-for-ut</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>agent-for-it</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.6.0.1398</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

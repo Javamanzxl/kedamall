@@ -1,0 +1,10 @@
+FROM java:17
+EXPOSE 8080
+# 同时把微服务里的server.port改成8080，在docker容器运行时映射端口改一个就可以了
+VOLUME /tmp
+# 本地IDEA target/app.jar
+ADD target/*.jar  /app.jar
+# 主要是为了修改创建时间，可以去掉
+RUN bash -c 'touch /app.jar'
+# 容器启动默认运行命令，并指定配置,--spring.profiles.active=prod没改
+ENTRYPOINT ["java","-jar","/app.jar","-Xmx100m","--spring.profiles.active=prod"]
